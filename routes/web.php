@@ -16,8 +16,10 @@ use App\Http\Controllers\MqttController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
+use App\Models\User;
 use App\Websockets\SocketHandler\UpdatePostSocketHandler;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/chat-message', 'store')->name('chat.store');
     });
 
+    Route::get('/posts/get', [PostController::class, 'ajax'])->name('posts.ajax');
     Route::resource('/posts', PostController::class);
 });
 
@@ -54,6 +57,7 @@ Route::get('/welcome', function () {
 Route::middleware(['auth', IsAdmin::class])->group(function () {
     Route::get('/users/grid', [UserController::class, 'grid'])->name('users.grid');
     Route::resource('/users', UserController::class);
+    Route::get('/users/get', [UserController::class, 'ajax'])->name('users.ajax');
 });
 
 require __DIR__ . '/auth.php';
@@ -75,6 +79,14 @@ Route::get('/redis', function () {
 
 Route::get('/ws', function () {
     return 'websocket';
+});
+
+Route::get('/rd', function () {
+    // Cache::set('users', ['user', 'ronaldo']);
+    // Cache::clear('users');
+
+    // $users = Cache::get('users');
+    // dd($users);
 });
 
 // WebSocketsRouter::webSocket('/socket/update-post', UpdatePostSocketHandler::class);

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\UsersJob;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -27,15 +28,44 @@ class UserController extends Controller
     public function index()
     {
         /* Job */
-        $job = new UsersJob();
-        $this->dispatch($job);
+        // $job = new UsersJob();
+        // $this->dispatch($job);
         // $users = User::with('posts.tags')->orderBy('updated_at', 'desc')->get();
-        $users = Cache::remember('users', 10*60, function() {
-            return User::with('posts.tags')->orderBy('updated_at', 'desc')->get();
+        // $client = new Predis\();
+        // $client->set('foo', 'bar');
+        // $value = $client->get('foo');
+
+        // $users = Cache::remember('users', 60*60*24, function() {
+        //     return User::orderBy('updated_at', 'desc')->get();
+        // });
+
+        $usersCount = Cache::remember('usersCount', now()->addDays(1), function() {
+            return User::count();
         });
+
+        // return Cache::get('users');
         return view('users.list', [
             'title' => 'Users',
-        ], compact('users'));
+        ], compact('usersCount'));
+    }
+
+    public function ajax(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Cache::remember('posts', 60*60*24, function() {
+                return User::orderBy('updated_at', 'desc')->get();
+            });
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $actionBtn = '<a href="#" class="edit badge badge-soft-success">Edit</a> <a href="#" class="delete badge badge-soft-danger">Delete</a>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        // ' . "{{ route('users.edit') }}" .'
+        // ' . "{{ route('users.destroy') }}" .'
     }
 
     public function create()

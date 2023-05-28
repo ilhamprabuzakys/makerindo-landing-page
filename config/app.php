@@ -188,6 +188,7 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Salman\Mqtt\MqttServiceProvider::class,
         Mtownsend\ResponseXml\Providers\ResponseXmlServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
 
         /*
@@ -217,6 +218,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Mqtt' => \Salman\Mqtt\Facades\Mqtt::class,
         'Socialite' => \Laravel\Socialite\Facades\Socialite::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ])->toArray(),
 
 ];

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Events\WebsocketDemoEvent;
 use App\Models\Company;
+use App\Models\Coordinate;
 use App\Models\Karyawan;
 use App\Models\Log;
 use App\Models\Loker;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Jikan\MyAnimeList\MalClient;
 use Jikan\Request\Manga\MangaRequest;
@@ -43,13 +46,25 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        $users = User::all();
-        $karyawancount = Karyawan::count();
-        $usercount = Karyawan::count();
+        $postsCount = Cache::remember('postsCount', now()->addDays(1), function () {
+            return Post::count();
+        });
 
+        $usersCount = Cache::remember('usersCount', now()->addDays(1), function () {
+            return User::count();
+        });
+        
+        $karyawanCount = Cache::remember('karyawanCount', now()->addDays(1), function () {
+            return Karyawan::count();
+        });
+        
+        $markerCount = Cache::remember('markerCount', now()->addDays(1), function () {
+            return Coordinate::count();
+        });
+        
         return view('dashboard.index', [
             'title' => 'Dashboard',
-        ], compact('users', 'karyawancount', 'usercount'));
+        ], compact('usersCount', 'postsCount', 'karyawanCount', 'markerCount'));
     }
     
    

@@ -7,7 +7,7 @@
 <div class="row align-items-center">
    <div class="col-md-6">
       <div class="mb-3">
-         <h5 class="card-title">Daftar Users <span class="text-muted fw-normal ms-2">({{ $users->count() }})</span></h5>
+         <h5 class="card-title">Daftar Users <span class="text-muted fw-normal ms-2">({{ $usersCount }})</span></h5>
       </div>
    </div>
 
@@ -98,7 +98,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <ul>
+                                                {{-- <ul>
                                                    @forelse($user->posts as $key => $post)
                                                    <li>
                                                       <a href="{{ route('posts.show', $post) }}">
@@ -115,7 +115,7 @@
                                                    @empty
                                                    <li>Data masih kosong!</li>
                                                    @endforelse
-                                                </ul>
+                                                </ul> --}}
                                             </div>
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->

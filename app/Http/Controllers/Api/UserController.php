@@ -18,7 +18,7 @@ class UserController extends Controller
         // $users = User::orderBy('updated_at', 'desc')->get();
         // $job = new UsersJob();
         // $this->dispatch($job);
-        $users = Cache::remember('users', now()->addMinutes(150), function() {
+        $users = Cache::remember('users', now()->addDays(2), function() {
             return User::with('posts.tags')->orderBy('updated_at', 'desc')->get();
         });
         

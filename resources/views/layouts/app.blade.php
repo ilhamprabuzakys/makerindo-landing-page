@@ -27,6 +27,11 @@
 
 <body data-sidebar="dark">
 
+   @php
+      $auth = cache()->remember('auth-user', 60*60*24, function() {
+         return auth()->user();
+      })
+   @endphp
    <!-- <body data-layout="horizontal"> -->
 
    <!-- Begin page -->
